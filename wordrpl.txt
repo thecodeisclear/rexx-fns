@@ -1,0 +1,36 @@
+/* Function Name : wordrpl                                           */
+/* Purpose       : Function to replace text within a string          */
+/*                                                                   */
+/* Usage         : <oStr> = wordrpl(<iStr>,<findStr>,<replStr>)      */
+/*                                                                   */
+/*     where oStr is the variable that will store the output of the  */
+/*     function, iStr is the input. findStr contains the set of      */
+/*     characters to find and replStr is the set of characters that  */
+/*     will replace the original                                     */
+/* Example(s)    :                                                   */
+/* 1/ Basic Example                                                  */
+/*    Phone = "(212)-273-7483"                                       */
+/*    newPhone = wordrpl(Phone,"(212)","(813)")                      */
+/*    say newPhone                                                   */
+/* will output (813)-273-7483                                        */
+/*                                                                   */
+/* 2/ Multiple Occurences                                            */
+/*    options = "Burger & Fries or Wrap & Fries"                     */
+/*    healthyopt = wordrpl(options,"Fries","Salad")                  */
+/*    say healthyopt                                                 */
+/* will output Burger & Salad or Wrap & Salad                        */
+/*                                                                   */
+wordrpl:                                                                        
+   iStr = ARG(1)                                                                
+   lenarg2 = Length(ARG(2))                                                     
+   startPos = 1                                                  
+   Do Forever                                                                   
+      posiStr = pos(ARG(2),iStr,startPos)                        
+      If posiStr = 0 Then Leave                                                 
+      iStr = substr(iStr,1,posiStr-1) || ARG(3) || ,                            
+             substr(iStr,posiStr+lenarg2)                                       
+      startPos = posiStr + lenarg2                               
+      If diffLen > 0 Then                                                       
+         iStr = substr(iStr,1,length(iStr)+diffLen)                             
+   End                                                                          
+Return iStr                                                                     
