@@ -1,0 +1,57 @@
+/* Function to check if the given number satisfies the Luhn's check  */
+/* (also known as the mod 10 algorithm). Luhn's check is typically   */
+/* used to validate identity numbers such as credit card numbers,    */
+/* IMEI numbers.                                                     */
+/*                                                                   */
+/* Usage: <return-code> = LuhnChk(<nbr>)                             */
+/* where                                                             */
+/*       <return-code> is a numeric value that contains the result   */
+/*                     of the check. Expected values are             */
+/*                     10 : Check was successful                     */
+/*                     11 : Error in Input (non-numeric characters)  */
+/*                    0-9 : Check failed. Actual check digit is the  */
+/*                          return code                              */
+/*                                                                   */
+/* Examples:                                                         */
+/*        say LuhnChk('4563960122001999')                            */
+/*            will display the value 10                              */
+/*        say LuhnChk('4563960122001992')                            */
+/*            will display the value 9 (actual check digit)          */
+/*        say LuhnChk('79927398713')                                 */
+/*            will display the value 10                              */
+/*      ! Note that leading zeros have no effect on the algorithm !  */
+/*        say LuhnChk('00079927398713')                              */
+/*            will also display the value 10                         */
+/*        say LuhnChk('28091271A')                                   */
+/*            will display the value 11                              */
+LuhnChk:                                                               
+   parse arg Nbr .                                                     
+   lnNbr = length(Nbr)                                                 
+   revNbr = ''                                                         
+   tot = 0                                                             
+   /* Reverse the Input Number */                                      
+   Do idx = 1 to lnNbr                                                 
+      If datatype(substr(Nbr,idx,1)) <> 'NUM' Then                     
+         Return 11                                                     
+      revNbr = substr(Nbr,idx,1) || revNbr                             
+   End                                                                 
+   /* Begin Checking */                                                
+   Do idx = 1 to lnNbr                                                 
+      currVal = substr(revNbr,idx,1)                                   
+      If idx // 2 = 1 Then                                             
+         Do                                                            
+            result = currVal                                           
+         End                                                           
+      Else                                                             
+         Do                                                            
+            result = currVal * 2                                       
+            If result >= 10 Then                                       
+                result = left(result,1) + right(result,1)              
+         End                                                           
+      tot = tot + result                                               
+   End                                                                 
+   If tot // 10 = 0 Then Return 10                                     
+   lastNbr = substr(Nbr,lnNbr,1)                                       
+   If lastNbr < tot // 10 Then lastNbr = lastNbr + 10                  
+   actChk = lastNbr - (tot // 10)                                      
+Return actChk                                                         

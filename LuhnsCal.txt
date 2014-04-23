@@ -1,0 +1,54 @@
+/* Function to calculate the check digit to be added to a number so  */
+/* that it satisfies the Luhn's Algorithm (also known as the mod 10  */
+/* algorithm. Luhn's check is typically used to validate identity    */
+/* numbers such as credit card numbers, IMEI numbers, etc.           */
+/*                                                                   */
+/* Usage: <check-digit> = LuhnCal(<nbr>)                             */
+/* where                                                             */
+/*       <check-digit> is a numeric value that contains the final    */
+/*                     check digit. Expected values are              */
+/*                    0-9 : Computed check digit                     */
+/*                     11 : Error in Input (non-numeric characters)  */
+/* you can also use it with the concatenation operator to give you   */
+/* the final number as below:                                        */
+/* CrCrdNbr = CrCrdNbr || LuhnCal(CrCrdNbr)                          */
+/*                                                                   */
+/* Examples:                                                         */
+/*        say LuhnCal('456396012290199')                             */
+/*            will display the value 0                               */
+/*        say LuhnCal('7992739871')                                  */
+/*            will display the value 3                               */
+/*      ! Note that leading zeros have no effect on the algorithm !  */
+/*        say LuhnCal('0007992739871')                               */
+/*            will also display the value 3                          */
+/*        say LuhnCal('1,482,293')                                   */
+/*            will display the value 11                              */
+LuhnCal:                                                               
+   parse arg Nbr .                                                     
+   lnNbr = length(Nbr)                                                 
+   revNbr = ''                                                         
+   tot = 0                                                             
+   /* Check if input data is numeric as well as reversing it */        
+   Do idx = 1 to lnNbr                                                 
+      If datatype(substr(Nbr,idx,1)) <> 'NUM' Then                     
+         Return 11                                                     
+      revNbr = substr(Nbr,idx,1) || revNbr                             
+   End                                                                 
+   /* Calculate Total of existing digits */                            
+   Do idx = 1 to lnNbr                                                 
+      currVal = substr(revNbr,idx,1)                                   
+      If idx // 2 = 0 Then                                             
+         Do                                                            
+            result = currVal                                           
+         End                                                           
+      Else                                                             
+         Do                                                            
+            result = currVal * 2                                       
+            If result >= 10 Then                                       
+                result = left(result,1) + right(result,1)              
+         End                                                           
+      tot = tot + result                                               
+   End                                                                 
+   If tot // 10 = 0 Then Return 0                                      
+   lastNbr = 10 - (tot // 10)                                          
+Return lastNbr                                                         
